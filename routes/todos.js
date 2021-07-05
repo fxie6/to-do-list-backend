@@ -15,12 +15,29 @@ router.get("/", async (req, res) => {
 // Submit a todo
 router.post("/", async (req, res) => {
   const todo = new Todo({
-    description: req.body.description,
+    text: req.body.text,
+    completed: req.body.completed,
+    _id: req.body._id,
   });
 
   try {
     const savedTodo = await todo.save();
     res.json(savedTodo);
+  } catch (error) {
+    res.json({ message: error });
+  }
+});
+
+// Update a todo
+router.put("/:todoId", async (req, res) => {
+  try {
+    const updatedTodo = await Todo.findByIdAndUpdate(req.params.todoId, {
+      text: req.body.text,
+      completed: req.body.completed,
+      _id: req.body._id,
+    });
+    res.send("Todo Updated!");
+    // res.json(updatedTodo);
   } catch (error) {
     res.json({ message: error });
   }
@@ -35,3 +52,5 @@ router.delete("/:todoId", async (req, res) => {
     res.json({ message: error });
   }
 });
+
+module.exports = router;
